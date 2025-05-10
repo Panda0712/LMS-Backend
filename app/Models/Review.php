@@ -14,21 +14,38 @@ class Review extends Model
     protected $collection = 'reviews';
 
     protected $fillable = [
-        'user_id',
-        'course_id',
+        'userAvatar',
+        'userName',
         'rating',
-        'comment',
-        'created_at',
-        'updated_at',
+        'content',
+        'userId',
+        'courseId',
+        'createdAt',
+        'updatedAt',
+        '_destroy'
+    ];
+
+    protected $casts = [
+        'userId' => 'string',
+        'courseId' => 'string',
+        'rating' => 'integer',
+        'createdAt' => 'timestamp',
+        'updatedAt' => 'timestamp',
+        '_destroy' => 'boolean'
+    ];
+
+    protected $dates = [
+        'createdAt',
+        'updatedAt'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', '_id');
+        return $this->belongsTo(User::class, 'userId', '_id');
     }
 
     public function course()
     {
-        return $this->belongsTo(Course::class, 'course_id', '_id');
+        return $this->belongsTo(Course::class, 'courseId', '_id');
     }
 }

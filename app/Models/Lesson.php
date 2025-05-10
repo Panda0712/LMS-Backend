@@ -14,24 +14,35 @@ class Lesson extends Model
     protected $collection = 'lessons';
 
     protected $fillable = [
-        'title',
-        'content',
-        'video',
-        'video_url', // Cloudinary video URL
-        'course_id',
-        'module_id',
-        'order',
-        'created_at',
-        'updated_at',
+        'name',
+        'video_url',
+        'courseId',
+        'moduleId',
+        'createdAt',
+        'updatedAt',
+        '_destroy'
+    ];
+
+    protected $casts = [
+        'courseId' => 'string',
+        'moduleId' => 'string',
+        'createdAt' => 'timestamp',
+        'updatedAt' => 'timestamp',
+        '_destroy' => 'boolean'
+    ];
+
+    protected $dates = [
+        'createdAt',
+        'updatedAt'
     ];
 
     public function course()
     {
-        return $this->belongsTo(Course::class, 'course_id', '_id');
+        return $this->belongsTo(Course::class, 'courseId', '_id');
     }
 
     public function module()
     {
-        return $this->belongsTo(Module::class, 'module_id', '_id');
+        return $this->belongsTo(Module::class, 'moduleId', '_id');
     }
 }

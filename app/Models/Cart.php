@@ -14,18 +14,46 @@ class Cart extends Model
     protected $collection = 'carts';
 
     protected $fillable = [
-        'user_id',
-        'items',
-        'created_at',
-        'updated_at',
+        'userId',
+        'courseId',
+        'totalPrice',
+        'courseName',
+        'courseThumbnail',
+        'instructor',
+        'duration',
+        'totalLessons',
+        'totalReviews',
+        'rating',
+        'createdAt',
+        'updatedAt',
+        '_destroy'
     ];
 
     protected $casts = [
-        'items' => 'array',
+        'userId' => 'string',
+        'courseId' => 'string',
+        'totalPrice' => 'integer',
+        'duration' => 'float',
+        'totalLessons' => 'integer',
+        'totalReviews' => 'integer',
+        'rating' => 'integer',
+        'createdAt' => 'timestamp',
+        'updatedAt' => 'timestamp',
+        '_destroy' => 'boolean'
+    ];
+
+    protected $dates = [
+        'createdAt',
+        'updatedAt'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', '_id');
+        return $this->belongsTo(User::class, 'userId', '_id');
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'courseId', '_id');
     }
 }

@@ -14,14 +14,34 @@ class Voucher extends Model
     protected $collection = 'vouchers';
 
     protected $fillable = [
+        'name',
+        'discount',
+        'courseIds',
         'code',
-        'discount_type',
-        'discount_value',
-        'usage_limit',
-        'used_count',
-        'valid_from',
-        'valid_until',
-        'created_at',
-        'updated_at',
+        'usageLimit',
+        'usedCount',
+        'minOrderValue',
+        'expiredAt',
+        'createdAt',
+        'updatedAt',
+        '_destroy'
+    ];
+
+    protected $casts = [
+        'courseIds' => 'array',
+        'discount' => 'integer',
+        'usageLimit' => 'integer',
+        'usedCount' => 'integer',
+        'minOrderValue' => 'integer',
+        'expiredAt' => 'timestamp',
+        'createdAt' => 'timestamp',
+        'updatedAt' => 'timestamp',
+        '_destroy' => 'boolean'
+    ];
+
+    protected $dates = [
+        'expiredAt',
+        'createdAt',
+        'updatedAt'
     ];
 }

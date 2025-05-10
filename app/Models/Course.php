@@ -14,33 +14,35 @@ class Course extends Model
     protected $collection = 'courses';
 
     protected $fillable = [
-        'title',
+        'thumbnail',
+        'instructor',
+        'instructorRole',
+        'instructorDescription',
+        'name',
         'description',
-        'image', // Cloudinary thumbnail
-        'video', // Cloudinary video
-        'tags',
-        'courseModules',
+        'duration',
+        'students',
         'price',
-        'status',
-        'author_id',
-        'lessonIds',
-        'created_at',
-        'updated_at',
+        'discount',
+        'courseModules',
+        'createdAt',
+        'updatedAt',
+        '_destroy'
     ];
 
     protected $casts = [
-        'tags' => 'array',
         'courseModules' => 'array',
-        'lessonIds' => 'array',
+        'duration' => 'float',
+        'students' => 'integer',
+        'price' => 'integer',
+        'discount' => 'integer',
+        'createdAt' => 'timestamp',
+        'updatedAt' => 'timestamp',
+        '_destroy' => 'boolean'
     ];
 
-    public function lessons()
-    {
-        return $this->hasMany(Lesson::class, 'course_id', '_id');
-    }
-
-    public function author()
-    {
-        return $this->belongsTo(User::class, 'author_id', '_id');
-    }
+    protected $dates = [
+        'createdAt',
+        'updatedAt'
+    ];
 }

@@ -16,15 +16,21 @@ class Contact extends Model
     protected $fillable = [
         'name',
         'email',
-        'subject',
+        'phone',
         'message',
-        'user_id',
-        'created_at',
-        'updated_at',
+        'createdAt',
+        'updatedAt',
+        '_destroy'
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', '_id');
-    }
+    protected $casts = [
+        'createdAt' => 'timestamp',
+        'updatedAt' => 'timestamp',
+        '_destroy' => 'boolean'
+    ];
+
+    protected $dates = [
+        'createdAt',
+        'updatedAt'
+    ];
 }

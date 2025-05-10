@@ -16,24 +16,30 @@ class Module extends Model
     protected $fillable = [
         'title',
         'description',
-        'course_id',
-        'lessonIds',
-        'order',
-        'created_at',
-        'updated_at',
+        'duration',
+        'lessons',
+        'courseId',
+        'createdAt',
+        'updatedAt',
+        '_destroy'
     ];
 
     protected $casts = [
-        'lessonIds' => 'array',
+        'lessons' => 'array',
+        'duration' => 'float',
+        'courseId' => 'string',
+        'createdAt' => 'timestamp',
+        'updatedAt' => 'timestamp',
+        '_destroy' => 'boolean'
+    ];
+
+    protected $dates = [
+        'createdAt',
+        'updatedAt'
     ];
 
     public function course()
     {
-        return $this->belongsTo(Course::class, 'course_id', '_id');
-    }
-
-    public function lessons()
-    {
-        return $this->hasMany(Lesson::class, 'module_id', '_id');
+        return $this->belongsTo(Course::class, 'courseId', '_id');
     }
 }

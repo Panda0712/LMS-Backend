@@ -14,22 +14,42 @@ class Order extends Model
     protected $collection = 'orders';
 
     protected $fillable = [
-        'user_id',
-        'items',
-        'total',
+        'userId',
+        'courseId',
+        'userEmail',
+        'userName',
+        'courseName',
+        'courseThumbnail',
+        'instructor',
+        'totalPrice',
+        'paymentMethod',
         'status',
-        'payment_info',
-        'created_at',
-        'updated_at',
+        'createdAt',
+        'updatedAt',
+        '_destroy'
     ];
 
     protected $casts = [
-        'items' => 'array',
-        'payment_info' => 'array',
+        'userId' => 'string',
+        'courseId' => 'string',
+        'totalPrice' => 'integer',
+        'createdAt' => 'timestamp',
+        'updatedAt' => 'timestamp',
+        '_destroy' => 'boolean'
+    ];
+
+    protected $dates = [
+        'createdAt',
+        'updatedAt'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', '_id');
+        return $this->belongsTo(User::class, 'userId', '_id');
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class, 'courseId', '_id');
     }
 }

@@ -15,20 +15,32 @@ class Blog extends Model
 
     protected $fillable = [
         'title',
+        'summary',
         'content',
-        'image',
         'tags',
-        'author_id',
-        'created_at',
-        'updated_at',
+        'coverImage',
+        'author',
+        'authorId',
+        'createdAt',
+        'updatedAt',
+        '_destroy'
     ];
 
     protected $casts = [
         'tags' => 'array',
+        'authorId' => 'string',
+        'createdAt' => 'timestamp',
+        'updatedAt' => 'timestamp',
+        '_destroy' => 'boolean'
     ];
 
-    public function author()
+    protected $dates = [
+        'createdAt',
+        'updatedAt'
+    ];
+
+    public function authorUser()
     {
-        return $this->belongsTo(User::class, 'author_id', '_id');
+        return $this->belongsTo(User::class, 'authorId', '_id');
     }
 }
