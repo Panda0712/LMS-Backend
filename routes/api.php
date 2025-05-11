@@ -25,10 +25,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/test', function() {
+    return response()->json(['message' => 'API is working']);
+});
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+// Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::middleware('auth:api')->group(function () {
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('me', [AuthController::class, 'me']);
+    // Các route cần auth khác
+});
 Route::post('password/reset', [AuthController::class, 'resetPassword']);
-Route::post('media/upload', [MediaController::class, 'upload'])->middleware('auth:sanctum');
-Route::post('payment/pay', [PaymentController::class, 'pay'])->middleware('auth:sanctum');
-Route::post('payment/callback', [PaymentController::class, 'callback']);
+// Route::post('media/upload', [MediaController::class, 'upload'])->middleware('auth:sanctum');
+// Route::post('payment/pay', [PaymentController::class, 'pay'])->middleware('auth:sanctum');
+// Route::post('payment/callback', action: [PaymentController::class, 'callback']);
