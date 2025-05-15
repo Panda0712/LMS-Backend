@@ -25,13 +25,15 @@ class VoucherController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'name' => 'required|string',
+            'discount' => 'required|integer',
+            'courseIds' => 'nullable|array',
             'code' => 'required|string',
-            'discount_type' => 'required|string',
-            'discount_value' => 'required|numeric',
-            'usage_limit' => 'nullable|integer',
-            'used_count' => 'nullable|integer',
-            'valid_from' => 'nullable|date',
-            'valid_until' => 'nullable|date',
+            'usageLimit' => 'nullable|integer',
+            'usedCount' => 'nullable|integer',
+            'minOrderValue' => 'nullable|integer',
+            'expiredAt' => 'nullable|date',
+            '_destroy' => 'nullable|boolean',
         ]);
         $voucher = Voucher::create($data);
         return response()->json($voucher, 201);
@@ -44,13 +46,15 @@ class VoucherController extends Controller
             return response()->json(['message' => 'Voucher not found'], 404);
         }
         $data = $request->validate([
+            'name' => 'sometimes|required|string',
+            'discount' => 'sometimes|required|integer',
+            'courseIds' => 'nullable|array',
             'code' => 'sometimes|required|string',
-            'discount_type' => 'sometimes|required|string',
-            'discount_value' => 'sometimes|required|numeric',
-            'usage_limit' => 'nullable|integer',
-            'used_count' => 'nullable|integer',
-            'valid_from' => 'nullable|date',
-            'valid_until' => 'nullable|date',
+            'usageLimit' => 'nullable|integer',
+            'usedCount' => 'nullable|integer',
+            'minOrderValue' => 'nullable|integer',
+            'expiredAt' => 'nullable|date',
+            '_destroy' => 'nullable|boolean',
         ]);
         $voucher->update($data);
         return response()->json($voucher);

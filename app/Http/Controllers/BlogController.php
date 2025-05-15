@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class BlogController extends Controller
 {
@@ -28,19 +26,18 @@ class BlogController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string',
+            'summary' => 'nullable|string',
             'content' => 'required|string',
-            'image' => 'nullable|file|image',
             'tags' => 'nullable|array',
-            'author_id' => 'required|string',
+            'coverImage' => 'nullable|string',
+            'author' => 'nullable|string',
+            'authorId' => 'required|string',
         ]);
-        if ($request->hasFile('image')) {
-            // Assuming Cloudinary is configured as a disk in config/filesystems.php
-            $file = $request->file('image');
-            $path = Storage::disk('cloudinary')->putFile('blogs', $file);
-            $data['image'] = Cloudinary::getUrl($path);
-        } elseif ($request->has('image')) {
-            $data['image'] = $request->input('image');
-        }
+        
+        $data['createdAt'] = now();
+        $data['updatedAt'] = now();
+        $data['_destroy'] = false;
+        
         $blog = Blog::create($data);
         return response()->json($blog, 201);
     }
@@ -51,20 +48,19 @@ class BlogController extends Controller
         if (!$blog) {
             return response()->json(['message' => 'Blog not found'], 404);
         }
+        
         $data = $request->validate([
             'title' => 'sometimes|required|string',
+            'summary' => 'nullable|string',
             'content' => 'sometimes|required|string',
-            'image' => 'nullable|file|image',
             'tags' => 'nullable|array',
-            'author_id' => 'sometimes|required|string',
+            'coverImage' => 'nullable|string',
+            'author' => 'nullable|string',
+            'authorId' => 'sometimes|required|string',
         ]);
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $path = Storage::disk('cloudinary')->putFile('blogs', $file);
-            $data['image'] = Cloudinary::getUrl($path);
-        } elseif ($request->has('image')) {
-            $data['image'] = $request->input('image');
-        }
+        
+        $data['updatedAt'] = now();
+        
         $blog->update($data);
         return response()->json($blog);
     }

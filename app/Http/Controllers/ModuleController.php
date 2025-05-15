@@ -27,9 +27,12 @@ class ModuleController extends Controller
         $data = $request->validate([
             'title' => 'required|string',
             'description' => 'nullable|string',
-            'course_id' => 'required|string',
-            'lessonIds' => 'nullable|array',
-            'order' => 'nullable|integer',
+            'duration' => 'required|numeric',
+            'lessons' => 'nullable|array',
+            'courseId' => 'required|string',
+            'createdAt' => 'nullable|date',
+            'updatedAt' => 'nullable|date',
+            '_destroy' => 'nullable|boolean',
         ]);
         $module = Module::create($data);
         return response()->json($module, 201);
@@ -44,9 +47,12 @@ class ModuleController extends Controller
         $data = $request->validate([
             'title' => 'sometimes|required|string',
             'description' => 'nullable|string',
-            'course_id' => 'sometimes|required|string',
-            'lessonIds' => 'nullable|array',
-            'order' => 'nullable|integer',
+            'duration' => 'sometimes|required|numeric',
+            'lessons' => 'nullable|array',
+            'courseId' => 'sometimes|required|string',
+            'createdAt' => 'nullable|date',
+            'updatedAt' => 'nullable|date',
+            '_destroy' => 'nullable|boolean',
         ]);
         $module->update($data);
         return response()->json($module);

@@ -8,12 +8,14 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('modules', ModuleController::class);
+Route::apiResource('modules', controller: ModuleController::class);
+Route::apiResource('courses', controller: CourseController::class);
 Route::apiResource('carts', CartController::class);
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('orders', OrderController::class);

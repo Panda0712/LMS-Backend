@@ -27,10 +27,21 @@ class ContactController extends Controller
         $data = $request->validate([
             'name' => 'required|string',
             'email' => 'required|email',
-            'subject' => 'nullable|string',
+            'phone' => 'nullable|string',
             'message' => 'required|string',
-            'user_id' => 'nullable|string',
+            'createdAt' => 'nullable|date',
+            'updatedAt' => 'nullable|date',
+            '_destroy' => 'nullable|boolean',
         ]);
+        
+        // Nếu không cung cấp thời gian, tự động thiết lập
+        if (!isset($data['createdAt'])) {
+            $data['createdAt'] = now();
+        }
+        if (!isset($data['updatedAt'])) {
+            $data['updatedAt'] = now();
+        }
+        
         $contact = Contact::create($data);
         return response()->json($contact, 201);
     }
@@ -44,10 +55,16 @@ class ContactController extends Controller
         $data = $request->validate([
             'name' => 'sometimes|required|string',
             'email' => 'sometimes|required|email',
-            'subject' => 'nullable|string',
+            'phone' => 'nullable|string',
             'message' => 'sometimes|required|string',
-            'user_id' => 'nullable|string',
+            'createdAt' => 'nullable|date',
+            'updatedAt' => 'nullable|date',
+            '_destroy' => 'nullable|boolean',
         ]);
+        
+        // Luôn cập nhật thời gian updatedAt khi cập nhật
+        $data['updatedAt'] = now();
+        
         $contact->update($data);
         return response()->json($contact);
     }
