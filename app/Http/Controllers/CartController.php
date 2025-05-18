@@ -25,9 +25,22 @@ class CartController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'user_id' => 'required|string',
-            'items' => 'nullable|array',
+            'userId' => 'required|string',
+            'courseId' => 'required|string',
+            'totalPrice' => 'required|integer',
+            'courseName' => 'required|string',
+            'courseThumbnail' => 'nullable|string',
+            'instructor' => 'nullable|string',
+            'duration' => 'nullable|numeric',
+            'totalLessons' => 'nullable|integer',
+            'totalReviews' => 'nullable|integer',
+            'rating' => 'nullable|integer',
         ]);
+        
+        $data['createdAt'] = now();
+        $data['updatedAt'] = now();
+        $data['_destroy'] = false;
+        
         $cart = Cart::create($data);
         return response()->json($cart, 201);
     }
@@ -39,9 +52,20 @@ class CartController extends Controller
             return response()->json(['message' => 'Cart not found'], 404);
         }
         $data = $request->validate([
-            'user_id' => 'sometimes|required|string',
-            'items' => 'nullable|array',
+            'userId' => 'sometimes|required|string',
+            'courseId' => 'sometimes|required|string',
+            'totalPrice' => 'sometimes|required|integer',
+            'courseName' => 'sometimes|required|string',
+            'courseThumbnail' => 'nullable|string',
+            'instructor' => 'nullable|string',
+            'duration' => 'nullable|numeric',
+            'totalLessons' => 'nullable|integer',
+            'totalReviews' => 'nullable|integer',
+            'rating' => 'nullable|integer',
         ]);
+        
+        $data['updatedAt'] = now();
+        
         $cart->update($data);
         return response()->json($cart);
     }
