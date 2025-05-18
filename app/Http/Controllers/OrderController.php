@@ -25,11 +25,19 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'user_id' => 'required|string',
-            'items' => 'required|array',
-            'total' => 'required|numeric',
+            'userId' => 'required|string',
+            'courseId' => 'required|string',
+            'userEmail' => 'required|string',
+            'userName' => 'required|string',
+            'courseName' => 'required|string',
+            'courseThumbnail' => 'nullable|string',
+            'instructor' => 'nullable|string',
+            'totalPrice' => 'required|integer',
+            'paymentMethod' => 'nullable|string',
             'status' => 'nullable|string',
-            'payment_info' => 'nullable|array',
+            'createdAt' => 'nullable|date',
+            'updatedAt' => 'nullable|date',
+            '_destroy' => 'nullable|boolean',
         ]);
         $order = Order::create($data);
         return response()->json($order, 201);
@@ -42,11 +50,19 @@ class OrderController extends Controller
             return response()->json(['message' => 'Order not found'], 404);
         }
         $data = $request->validate([
-            'user_id' => 'sometimes|required|string',
-            'items' => 'sometimes|required|array',
-            'total' => 'sometimes|required|numeric',
+            'userId' => 'sometimes|required|string',
+            'courseId' => 'sometimes|required|string',
+            'userEmail' => 'sometimes|required|string',
+            'userName' => 'sometimes|required|string',
+            'courseName' => 'sometimes|required|string',
+            'courseThumbnail' => 'nullable|string',
+            'instructor' => 'nullable|string',
+            'totalPrice' => 'sometimes|required|integer',
+            'paymentMethod' => 'nullable|string',
             'status' => 'nullable|string',
-            'payment_info' => 'nullable|array',
+            'createdAt' => 'nullable|date',
+            'updatedAt' => 'nullable|date',
+            '_destroy' => 'nullable|boolean',
         ]);
         $order->update($data);
         return response()->json($order);
