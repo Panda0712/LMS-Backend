@@ -79,4 +79,21 @@ class CartController extends Controller
         $cart->delete();
         return response()->json(['message' => 'Cart deleted successfully']);
     }
+
+    public function findByUserAndCourse(Request $request)
+    {
+        $userId = $request->query('userId');
+        $courseId = $request->query('courseId');
+        
+        if (!$userId || !$courseId) {
+            return response()->json(['message' => 'userId and courseId are required'], 400);
+        }
+        
+        $cart = Cart::where('userId', $userId)->where('courseId', $courseId)->first();
+        if (!$cart) {
+            return response()->json(['exists' => false, 'message' => 'Cart not found'], 404);
+        }
+        
+        return response()->json(['exists' => true, 'data' => $cart]);
+    }
 }

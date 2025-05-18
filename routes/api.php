@@ -42,3 +42,4 @@ Route::post('password/reset', [AuthController::class, 'resetPassword']);
 // Route::post('media/upload', [MediaController::class, 'upload'])->middleware('auth:sanctum');
 // Route::post('payment/pay', [PaymentController::class, 'pay'])->middleware('auth:sanctum');
 // Route::post('payment/callback', action: [PaymentController::class, 'callback']);
+Route::get('carts/find-by-user-and-course', [CartController::class, 'findByUserAndCourse']);
