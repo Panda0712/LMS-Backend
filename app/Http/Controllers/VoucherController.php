@@ -39,6 +39,33 @@ class VoucherController extends Controller
         return response()->json($voucher, 201);
     }
 
+    public function findByCode(Request $request)
+    {
+        $code = $request->query('code');
+        $courseId = (string) $request->query('courseId');
+    
+        if (!$code) {
+            return response()->json(['message' => 'Code parameter is required'], 400);
+        }
+        if (!$courseId) {
+            return response()->json(['message' => 'CourseId parameter is required'], 400);
+        }
+    
+        $voucher = Voucher::where('code', $code)->first();
+    
+        if (!$voucher) {
+            return response()->json(['message' => 'Voucher not found'], 404);
+        }
+    
+        $courseIds = json_decode($voucher->courseIds, true);
+    
+        if (!is_array($courseIds) || !in_array($courseId, $courseIds)) {
+            return response()->json(['message' => 'Voucher not valid for this course'], 404);
+        }
+    
+        return response()->json($voucher);
+    }
+
     public function update(Request $request, $id)
     {
         $voucher = Voucher::find($id);

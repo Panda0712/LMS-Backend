@@ -22,6 +22,7 @@ Route::apiResource('orders', OrderController::class);
 Route::apiResource('reviews', ReviewController::class);
 Route::apiResource('blogs', BlogController::class);
 Route::apiResource('vouchers', VoucherController::class);
+Route::get('vouchers/find-by-name', [VoucherController::class, 'findByCode']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
