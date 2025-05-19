@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use Illuminate\Http\Request;
+use \MongoDB\BSON\ObjectId; 
 use Illuminate\Http\Response;
 
 class CartController extends Controller
@@ -72,7 +73,7 @@ class CartController extends Controller
 
     public function destroy($id)
     {
-        $cart = Cart::find($id);
+        $cart = Cart::where('_id', $id)->first();
         if (!$cart) {
             return response()->json(['message' => 'Cart not found'], 404);
         }

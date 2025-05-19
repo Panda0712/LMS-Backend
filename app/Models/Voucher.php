@@ -33,8 +33,7 @@ class Voucher extends Model
         'usageLimit' => 'integer',
         'usedCount' => 'integer',
         'minOrderValue' => 'integer',
-        'expiredAt' => 'timestamp',
-        'createdAt' => 'timestamp',
+        'expiredAt' => 'datetime:Y-m-d',
         'updatedAt' => 'timestamp',
         '_destroy' => 'boolean'
     ];
