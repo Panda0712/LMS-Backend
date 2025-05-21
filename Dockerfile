@@ -63,4 +63,4 @@ RUN chmod +x /docker-entrypoint.sh
 
 # Khởi động ứng dụng
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=$PORT"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]

@@ -16,6 +16,17 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         // CORS handling is now built into Laravel 12
+        // Đảm bảo middleware CORS luôn hoạt động
+        $middleware->alias([
+            'cors' => \App\Http\Middleware\Cors::class,
+        ]);
+        
+        $middleware->group('api', [
+            \App\Http\Middleware\Cors::class,
+        ]);
+
+        // Thêm middleware xử lý OPTIONS request
+        $middleware->prepend(\App\Http\Middleware\HandleCorsOptions::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
