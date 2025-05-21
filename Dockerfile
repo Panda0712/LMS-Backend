@@ -28,25 +28,30 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Sao chép mã nguồn ứng dụng
 COPY . /app
 
-# Cài đặt các phụ thuộc PHP
-RUN composer install --optimize-autoloader --no-dev
-
-# Tạo thư mục cần thiết và phân quyền
+# Tạo thư mục cần thiết và phân quyền trước khi cài đặt dependencies
 RUN mkdir -p bootstrap/cache \
     && chmod -R 777 bootstrap/cache \
     && mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache storage/logs \
     && chmod -R 777 storage
 
-# Khám phá các package
-RUN php artisan package:discover
+# Sửa lỗi MongoDB connection trong quá trình build
+RUN cp .env .env.backup \
+    && sed -i 's/CACHE_STORE=database/CACHE_STORE=file/g' .env \
+    && sed -i 's/SESSION_DRIVER=database/SESSION_DRIVER=file/g' .env
 
-# Cấu hình ứng dụng
-RUN php artisan config:clear \
-    && php artisan cache:clear \
-    && php artisan route:clear
+# Cài đặt các phụ thuộc PHP nhưng bỏ qua các scripts post-install để tránh cache:clear
+RUN composer install --optimize-autoloader --no-dev --no-scripts
+
+# Khôi phục file .env
+RUN mv .env.backup .env
 
 # Mở cổng
 EXPOSE 8000
 
+# Script khởi động
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
 # Khởi động ứng dụng
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=${PORT:-8000}"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
