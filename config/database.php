@@ -114,7 +114,7 @@ return [
 
         'mongodb' => [
             'driver' => 'mongodb',
-            'dsn' => env('MONGODB_URI', 'mongodb+srv://localhost'),
+            'dsn' => env('MONGODB_URI'),
             'database' => env('DATABASE_NAME', 'lms-backend'),
         ],
 
