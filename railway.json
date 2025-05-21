@@ -2,7 +2,7 @@
     "$schema": "https://railway.app/railway.schema.json",
     "build": {
         "builder": "nixpacks",
-        "buildCommand": "composer install --optimize-autoloader && php artisan package:discover"
+        "nixpacksConfigPath": "nixpacks.json"
     },
     "deploy": {
         "startCommand": "mkdir -p bootstrap/cache && chmod -R 777 bootstrap/cache && mkdir -p storage/framework/{sessions,views,cache} storage/logs && chmod -R 777 storage && php artisan config:clear && php artisan cache:clear && php artisan route:clear && php artisan serve --host=0.0.0.0 --port=$PORT",
