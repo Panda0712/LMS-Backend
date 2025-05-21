@@ -1,0 +1,13 @@
+# Loại bỏ các file và thư mục không cần thiết trong quá trình triển khai
+node_modules
+vendor
+.git
+.github
+.env.example
+.editorconfig
+.gitattributes
+.gitignore
+.styleci.yml
+phpunit.xml
+README.md
+CHANGELOG.md

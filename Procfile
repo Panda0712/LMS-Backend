@@ -1,0 +1,1 @@
+web: mkdir -p bootstrap/cache && chmod -R 777 bootstrap/cache && mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache storage/logs && chmod -R 777 storage && php artisan config:clear && php artisan route:clear && php artisan cache:clear && php artisan serve --host=0.0.0.0 --port=$PORT

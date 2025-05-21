@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-mongodb": "*",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.1",
         "laravel/tinker": "^2.10.1",
@@ -44,18 +45,23 @@
         ],
         "post-install-cmd": [
             "mkdir -p bootstrap/cache",
-            "chmod -R 755 bootstrap/cache",
+            "chmod -R 777 bootstrap/cache",
             "mkdir -p storage/logs",
-            "chmod -R 755 storage/logs",
+            "chmod -R 777 storage/logs",
             "mkdir -p storage/framework/sessions",
             "mkdir -p storage/framework/views",
             "mkdir -p storage/framework/cache",
+            "chmod -R 777 storage",
             "php artisan cache:clear",
             "php artisan config:clear",
             "php artisan route:clear"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "mkdir -p bootstrap/cache",
+            "chmod -R 777 bootstrap/cache",
+            "mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache",
+            "chmod -R 777 storage"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -86,6 +92,9 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "platform": {
+            "ext-mongodb": "1.16.0"
         }
     },
     "minimum-stability": "stable",
