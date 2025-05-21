@@ -38,7 +38,22 @@
         }
     },
     "scripts": {
-        "post-autoload-dump": [],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-install-cmd": [
+            "mkdir -p bootstrap/cache",
+            "chmod -R 755 bootstrap/cache",
+            "mkdir -p storage/logs",
+            "chmod -R 755 storage/logs",
+            "mkdir -p storage/framework/sessions",
+            "mkdir -p storage/framework/views",
+            "mkdir -p storage/framework/cache",
+            "php artisan cache:clear",
+            "php artisan config:clear",
+            "php artisan route:clear"
+        ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
