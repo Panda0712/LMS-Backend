@@ -5,6 +5,7 @@
         "dockerfilePath": "Dockerfile"
     },
     "deploy": {
+        "numReplicas": 1,
         "restartPolicyType": "on_failure",
         "restartPolicyMaxRetries": 10
     }

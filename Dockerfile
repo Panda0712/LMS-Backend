@@ -25,25 +25,34 @@ RUN pecl install mongodb && docker-php-ext-enable mongodb
 # Cài đặt Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Sao chép mã nguồn ứng dụng
-COPY . /app
-
-# Tạo thư mục cần thiết và phân quyền trước khi cài đặt dependencies
+# Tạo thư mục cần thiết và phân quyền
 RUN mkdir -p bootstrap/cache \
     && chmod -R 777 bootstrap/cache \
     && mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache storage/logs \
     && chmod -R 777 storage
 
-# Sửa lỗi MongoDB connection trong quá trình build
-RUN cp .env .env.backup \
-    && sed -i 's/CACHE_STORE=database/CACHE_STORE=file/g' .env \
-    && sed -i 's/SESSION_DRIVER=database/SESSION_DRIVER=file/g' .env
+# Sao chép composer.json và composer.lock trước
+COPY composer.json composer.lock ./
+
+# Tạo file .env mới với cấu hình phù hợp cho quá trình build
+RUN echo "APP_NAME=Laravel\n\
+APP_ENV=production\n\
+APP_KEY=base64:upk/1e0VXk+i9QWv6xnLqF+H/D4mRsSEsVtL1axUmAY=\n\
+APP_DEBUG=true\n\
+APP_URL=http://localhost\n\
+DB_CONNECTION=mongodb\n\
+MONGODB_URI=mongodb://localhost:27017/lms-backend\n\
+DATABASE_NAME=lms-backend\n\
+SESSION_DRIVER=file\n\
+SESSION_LIFETIME=120\n\
+CACHE_STORE=file\n\
+QUEUE_CONNECTION=sync\n" > .env
 
 # Cài đặt các phụ thuộc PHP nhưng bỏ qua các scripts post-install để tránh cache:clear
 RUN composer install --optimize-autoloader --no-dev --no-scripts
 
-# Khôi phục file .env
-RUN mv .env.backup .env
+# Sao chép phần còn lại của mã nguồn ứng dụng (sau khi cài đặt composer)
+COPY . .
 
 # Mở cổng
 EXPOSE 8000
@@ -54,4 +63,4 @@ RUN chmod +x /docker-entrypoint.sh
 
 # Khởi động ứng dụng
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=$PORT"]
