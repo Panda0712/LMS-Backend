@@ -32,6 +32,10 @@ class UserController extends Controller
             'avatar' => 'nullable|string',
             'role' => 'nullable|string',
             '_destroy' => 'nullable|boolean',
+            'fullName' => 'nullable|string',
+            'phone' => 'nullable|string',
+            'description' => 'nullable|string',
+            'socialLink' => 'nullable|array',
         ]);
 
         $data['password'] = Hash::make($data['password']);
@@ -54,6 +58,10 @@ class UserController extends Controller
             'avatar' => 'nullable|string',
             'role' => 'nullable|string',
             '_destroy' => 'nullable|boolean',
+            'fullName' => 'nullable|string',
+            'phone' => 'nullable|string',
+            'description' => 'nullable|string',
+            'socialLink' => 'nullable|array',
         ]);
 
         if ($validator->fails()) {

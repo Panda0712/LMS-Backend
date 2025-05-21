@@ -25,6 +25,10 @@ class User extends MongoUser implements JWTSubject
         'avatar',
         'role',
         '_destroy',
+        'fullName',
+        'phone',
+        'description',
+        'socialLink',
     ];
 
     protected $hidden = [
@@ -36,7 +40,8 @@ class User extends MongoUser implements JWTSubject
     {
         return [
             'password' => 'hashed',
-            '_destroy' => 'boolean'
+            '_destroy' => 'boolean',
+            'socialLink' => 'array',
         ];
     }
 

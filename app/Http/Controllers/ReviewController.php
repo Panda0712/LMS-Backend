@@ -25,11 +25,16 @@ class ReviewController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'user_id' => 'required|string',
-            'course_id' => 'required|string',
+            'userId' => 'required|string',
+            'courseId' => 'required|string',
             'rating' => 'required|numeric',
-            'comment' => 'nullable|string',
+            'content' => 'nullable|string',
+            'userAvatar' => 'nullable|string',
+            'userName' => 'nullable|string',
         ]);
+        $data['createdAt'] = now();
+        $data['updatedAt'] = now();
+        $data['_destroy'] = false;
         $review = Review::create($data);
         return response()->json($review, 201);
     }
@@ -41,11 +46,15 @@ class ReviewController extends Controller
             return response()->json(['message' => 'Review not found'], 404);
         }
         $data = $request->validate([
-            'user_id' => 'sometimes|required|string',
-            'course_id' => 'sometimes|required|string',
+            'userId' => 'sometimes|required|string',
+            'courseId' => 'sometimes|required|string',
             'rating' => 'sometimes|required|numeric',
-            'comment' => 'nullable|string',
+            'content' => 'nullable|string',
+            'userAvatar' => 'nullable|string',
+            'userName' => 'nullable|string',
+            '_destroy' => 'nullable|boolean',
         ]);
+        $data['updatedAt'] = now();
         $review->update($data);
         return response()->json($review);
     }
