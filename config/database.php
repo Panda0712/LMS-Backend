@@ -115,8 +115,8 @@ return [
         'mongodb' => [
             'driver' => 'mongodb',
             'dsn' => env('MONGODB_URI'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '27017'),
+            'host' => env('MONGODB_URI') ? null : env('DB_HOST', '127.0.0.1'),
+            'port' => env('MONGODB_URI') ? null : env('DB_PORT', '27017'),
             'database' => env('DATABASE_NAME', 'lms-backend'),
             'username' => env('DB_USERNAME'),
             'password' => env('DB_PASSWORD'),
