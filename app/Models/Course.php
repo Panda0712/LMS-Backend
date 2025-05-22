@@ -25,6 +25,7 @@ class Course extends Model
         'price',
         'discount',
         'courseModules',
+        'category',
         'createdAt',
         'updatedAt',
         '_destroy'
@@ -36,6 +37,7 @@ class Course extends Model
         'students' => 'integer',
         'price' => 'integer',
         'discount' => 'integer',
+        'category' => 'string',
         'createdAt' => 'timestamp',
         'updatedAt' => 'timestamp',
         '_destroy' => 'boolean'
