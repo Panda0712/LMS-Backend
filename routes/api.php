@@ -10,15 +10,15 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CourseController;
-use App\Http\Controllers\MediaController;
-use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::apiResource('modules', controller: ModuleController::class);
 Route::apiResource('courses', controller: CourseController::class);
 Route::apiResource('carts', CartController::class);
+Route::apiResource('wishlist', WishlistController::class);
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('orders', OrderController::class);
 Route::apiResource('reviews', ReviewController::class);
