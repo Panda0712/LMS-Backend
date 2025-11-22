@@ -1,62 +1,57 @@
 #!/bin/bash
 set -e
 
-# Đảm bảo các thư mục cần thiết tồn tại
-mkdir -p bootstrap/cache
-chmod -R 777 bootstrap/cache
-mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache storage/logs
-chmod -R 777 storage
+echo "Starting Container..."
 
-# Tạo một .env tối thiểu mà không cố gắng đọc từ biến môi trường
-cat > .env << EOL
+# Create required directories
+mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache storage/logs
+mkdir -p bootstrap/cache
+chmod -R 777 storage bootstrap/cache
+
+# Generate .env dynamically if missing
+if [ ! -f .env ]; then
+cat > .env <<EOL
 APP_NAME=Laravel
 APP_ENV=production
-APP_KEY=base64:upk/1e0VXk+i9QWv6xnLqF+H/D4mRsSEsVtL1axUmAY=
-APP_DEBUG=true
-APP_URL=${APP_URL:-http://localhost}
+APP_KEY=${APP_KEY}
+APP_DEBUG=false
+APP_URL=${APP_URL}
+
 DB_CONNECTION=mongodb
-MONGODB_URI=${MONGODB_URI:-mongodb://localhost:27017/lms-backend}
-DATABASE_NAME=${DATABASE_NAME:-lms-backend}
+MONGODB_URI=${MONGODB_URI}
+DATABASE_NAME=${DATABASE_NAME}
+
 SESSION_DRIVER=file
-SESSION_LIFETIME=120
 CACHE_STORE=file
 QUEUE_CONNECTION=sync
-SANCTUM_STATEFUL_DOMAINS=${SANCTUM_STATEFUL_DOMAINS:-localhost:8080}
-JWT_SECRET="R1XYny3U7RWo7pCIuaGp6J9stVz3FecDtX1oSh4gIlN6nf8HzxuRPORtq4mdOJKP"
+
+SANCTUM_STATEFUL_DOMAINS=${SANCTUM_STATEFUL_DOMAINS}
+JWT_SECRET=${JWT_SECRET}
 EOL
+    echo ".env created!"
+fi
 
-# Tăng memory limit cho PHP
-echo "memory_limit = 256M" > /usr/local/etc/php/conf.d/memory-limit.ini
+# Generate key if missing
+if [ -z "$APP_KEY" ]; then
+    echo "Generating APP_KEY..."
+    php artisan key:generate --force
+fi
 
-# Chạy các lệnh Laravel khi container khởi động
-php artisan package:discover --ansi
+# Clean caches
 php artisan config:clear
 php artisan route:clear
+php artisan cache:clear
 
-# Xử lý URL của MongoDB để chuyển sang định dạng URI đúng
-if [ ! -z "$MONGODB_URI" ]; then
-  # Loại bỏ dấu ngoặc kép ở đầu và cuối nếu có
-  CLEAN_URI=$(echo $MONGODB_URI | sed 's/^"//;s/"$//')
-  export MONGODB_URI=$CLEAN_URI
-  echo "MONGODB_URI đã được điều chỉnh."
+# Fix MongoDB URI if quoted
+if echo "$MONGODB_URI" | grep -q '^"'; then
+    export MONGODB_URI=$(echo $MONGODB_URI | sed 's/^"//;s/"$//')
 fi
 
-# Kiểm tra kết nối MongoDB trước khi chạy các lệnh khác
-echo "Kiểm tra kết nối MongoDB..."
-if php -r "try { new MongoDB\Driver\Manager(getenv('MONGODB_URI')); echo \"Kết nối MongoDB thành công!\"; } catch(\Exception \$e) { echo \"Lỗi kết nối MongoDB: \" . \$e->getMessage(); }"; then
-  echo "Tiếp tục khởi động..."
-  php artisan cache:clear
-else
-  echo "Cảnh báo: Không thể kết nối MongoDB, nhưng vẫn tiếp tục khởi động..."
-fi
+echo "Checking MongoDB connection..."
+php -r "try { new MongoDB\Driver\Manager(getenv('MONGODB_URI')); echo \"MongoDB connected OK\n\"; } catch(Exception \$e) { echo \"MongoDB connection error: \".$e->getMessage().\"\n\"; }";
 
-# Lấy PORT từ biến môi trường hoặc mặc định 8080
+# PORT override from Railway
 PORT=${PORT:-8080}
-echo "PORT được đặt thành: $PORT"
+echo "Listening on port: $PORT"
 
-# Ghi đè CMD để đảm bảo port được truyền đúng
-if [ "$1" = "php" ] && [ "$2" = "artisan" ] && [ "$3" = "serve" ]; then
-  exec php artisan serve --host=0.0.0.0 --port=$PORT
-else
-  exec "$@"
-fi
+exec php artisan serve --host=0.0.0.0 --port=$PORT
