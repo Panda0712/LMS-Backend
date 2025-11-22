@@ -20,26 +20,30 @@ RUN docker-php-ext-install zip pdo pdo_mysql mbstring
 # Install MongoDB extension
 RUN pecl install mongodb && docker-php-ext-enable mongodb
 
-# Install Composer
+# Install Composer from official image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy composer files
+# Copy composer files first (for better layer cache)
 COPY composer.json composer.lock ./
 
-# Install dependencies without running scripts
+# Install PHP dependencies WITHOUT running scripts
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Copy all source code
+# Copy actual project source
 COPY . .
 
-# Create storage and cache directories
-RUN mkdir -p storage bootstrap/cache \
+# Ensure required Laravel directories exist
+RUN mkdir -p storage/framework/sessions \
+             storage/framework/views \
+             storage/framework/cache \
+             storage/logs \
+             bootstrap/cache \
     && chmod -R 777 storage bootstrap/cache
 
-# Expose port
+# Expose Railway port
 EXPOSE 8080
 
-# Entry script
+# Copy entrypoint
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
